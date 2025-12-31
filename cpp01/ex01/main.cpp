@@ -14,10 +14,17 @@
 
 int main (void)
 {
-    Zombie* zizi;
+    Zombie* zizou;
     int N = 5;
 
-    zizi = zombieHorde(N, "yasser");
-    delete[] zizi;
+    zizou = zombieHorde(N, "yasser");
+    for (int i = 0; i < N; i++)
+    {
+        std::cout << i << " : ";
+        zizou[i].announce();
+    }
+    zizou[3].announce();
+    zizou[1].announce();
+    delete[] zizou;
     return (0);
 }

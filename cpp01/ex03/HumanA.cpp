@@ -14,12 +14,12 @@
 
 HumanA::HumanA(std::string name, Weapon& arme) : _name(name), weapon(arme)
 {
-
+    std::cout << "HumanA constructor called \n";
 }
 
 HumanA::~HumanA()
 {
-
+    std::cout << "HumanA Deconstructor called \n";
 }
 
 void HumanA::attack()

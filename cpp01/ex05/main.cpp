@@ -20,7 +20,7 @@ int main (void)
 	harl.complain("INFO");
 	harl.complain("WARNING");
 	harl.complain("ERROR");
-    harl.complain("1ERROR");
+    harl.complain("1 ERROR");
 	harl.complain("A");
     harl.complain("A");
     harl.complain("A");

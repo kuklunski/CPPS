@@ -20,11 +20,12 @@ void HumanB::setWeapon(Weapon& arme)
 HumanB::HumanB(std::string name) : weapon(NULL)
 {
     _name = name;
+    std::cout << "HumanB constructor called \n";
 }
 
 HumanB::~HumanB()
 {
-
+    std::cout << "HumanB Deconstructor called \n";
 }
 
 void HumanB::attack()

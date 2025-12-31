@@ -20,7 +20,6 @@ Zombie* zombieHorde( int N, std::string name )
     while (i < N)
     {
         zombieHorde[i].set_name(name);
-        zombieHorde[i].announce();
         i++;
     }
     return (zombieHorde);

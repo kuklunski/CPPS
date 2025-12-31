@@ -22,7 +22,7 @@ std::string make_output_file(std::string filename)
         return result;
     }
     result = filename + ".replace";
-    std::cout << result << std::endl;
+    std::cout << result << " file Created " << std::endl;
     return result;
 }
 
@@ -65,7 +65,6 @@ int main(int ac, char **argv)
             outputFile << line << "\n";
             i++;
         }
-        outputFile << std::endl;
 
         inputFile.close();
         outputFile.close(); 

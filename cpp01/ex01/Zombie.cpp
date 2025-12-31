@@ -24,9 +24,10 @@ void Zombie::announce( void )
 
 Zombie::Zombie()
 {
+    std::cout << "Default Constructor called" << std::endl;
 }
 
 Zombie::~Zombie()
 {
-
+    std::cout << "Deconstructor called" << std::endl;
 }

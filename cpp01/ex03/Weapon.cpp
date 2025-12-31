@@ -15,6 +15,7 @@
 Weapon::Weapon(std::string type)
 {
     _type = type;
+    std::cout << "Weapon constructor called \n";
 }
 
 const std::string& Weapon::getType()
@@ -24,4 +25,9 @@ const std::string& Weapon::getType()
 void Weapon::setType(const std::string newType)
 {
     this->_type = newType;
+}
+
+Weapon::~Weapon()
+{
+    std::cout << "Weapon Deconstructor called \n";
 }

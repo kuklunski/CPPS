@@ -14,9 +14,9 @@
 
 int main (void)
 {
-    Zombie *heap = newZombie("yasser");;
+    Zombie *yasser = newZombie("yasser");;
     randomChump("omar");
-    heap->announce();
-    delete heap;
+    yasser->announce();
+    delete yasser;
     return 0;
 }

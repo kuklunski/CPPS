@@ -18,7 +18,7 @@ Zombie::Zombie(std::string name)
 }
 Zombie::~Zombie()
 {
-    
+    std::cout << this->_name << ": Called its Deconstructor" << std::endl;
 }
 
 void    Zombie::announce(void)
