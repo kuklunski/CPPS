@@ -1,0 +1,61 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   MutantStack.hpp                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ylemkere <ylemkere@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/14 02:57:16 by ylemkere          #+#    #+#             */
+/*   Updated: 2026/04/14 02:57:16 by ylemkere         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef MUTANTSTACK_HPP
+#define MUTANTSTACK_HPP
+
+#include <iostream>
+#include <stack>
+
+template <typename T>
+class MutantStack : public std::stack<T>
+{
+    public :
+        typedef typename std::stack<T>::container_type container_type;
+        typedef typename container_type::iterator iterator;
+        typedef typename container_type::const_iterator const_iterator;
+
+        MutantStack() : std::stack<T>() {
+            std::cout << "MutantStack constructor\n";
+        }
+        ~MutantStack() {
+            std::cout << "MutantStack destructor\n";
+        }
+        MutantStack& operator=(const MutantStack& other) {
+            if (this != &other)
+                std::stack<T>::operator=(other);
+            return *this;
+        }
+        MutantStack(const MutantStack& other) : std::stack<T>(other) {
+            std::cout << "MutantStack copy constructor\n";
+        }
+
+        iterator begin()
+        {
+            return (this->c.begin());
+        }
+
+        iterator end()
+        {
+            return (this->c.end());
+        }
+
+        const_iterator begin() const {
+            return (this->c.begin());
+        }
+
+        const_iterator end() const {
+            return (this->c.end());
+        }
+};
+
+#endif
