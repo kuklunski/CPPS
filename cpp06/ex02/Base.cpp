@@ -31,6 +31,7 @@ Base* Base::generate(void)
     else return NULL;
 }
 
+// when using a pointer and the cast fails, it returns NULL
 void Base::identify(Base* p)
 {
     A* aptr = dynamic_cast<A*>(p);
@@ -44,7 +45,8 @@ void Base::identify(Base* p)
         std::cout << "C" << std::endl; 
 }
 
-// if the cast does not succeed it throws an exception of type bad_cast
+// if the cast does not succeed it throws an exception of type bad_cast 
+// becquse obviously it can't return NULL to be put in a reference or be empty
 void Base::identify(Base& p)
 {
     try
