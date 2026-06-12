@@ -31,6 +31,10 @@ template <typename T> class Array
         T& operator[](int index);
         const T& operator[](int index) const;
         int size() const;
+        class myException : public std::exception {
+            public :
+                const char *what() const throw();
+        };
 };
 
 template <typename T>
@@ -94,9 +98,7 @@ T& Array<T>::operator[](int index)
 {
     if (index < 0 || (unsigned int)index >= this->_size)
     {
-        // exception to do 
-        std::cout << "Array index out of bound, exiting";
-        exit(0);
+        throw myException();
     }
     return this->data[index];
 }
@@ -106,9 +108,7 @@ const T& Array<T>::operator[](int index) const
 {
     if (index < 0 || (unsigned int)index >= this->_size)
     {
-        // exception to do 
-        std::cout << "Array index out of bound, exiting";
-        exit(0);
+        throw myException();
     }
     return this->data[index];
 }
@@ -118,5 +118,12 @@ int Array<T>::size() const
 {
     return this->_size;
 }
+
+template <typename T>
+const char* Array<T>::myException::what() const throw()
+{
+    return "Out of Bounds";
+}
+
 
 #endif

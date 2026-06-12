@@ -25,5 +25,31 @@ int main ()
 
     for (int i = 0; i < 5; i++)
         std::cout << arr[i] << std::endl;
+
+    // bigger than length
+    try {
+        std::cout << arr[8] << std::endl;
+    }
+    catch (std::exception &e)
+    {
+        std::cout << e.what() << ": bigger than length" << std::endl;
+    }
+    // negative number
+    try {
+        std::cout << arr[-5] << std::endl;
+    }
+    catch (std::exception &e)
+    {
+        std::cout << e.what() << ": negative number" << std::endl;
+    }
+
+    // equal to length
+    try {
+        std::cout << arr[5] << std::endl;
+    }
+    catch (std::exception &e)
+    {
+        std::cout << e.what() << ": equal to length" << std::endl;
+    }
     std::cout << "siiiize :::: "<< arr.size() << "\n"; 
 }

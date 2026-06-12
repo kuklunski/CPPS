@@ -16,7 +16,7 @@
 int main()
 {
     Data data = {"yassir", 50, "male"};
-    
+
     uintptr_t address = reinterpret_cast<uintptr_t>(&data);
     Data *ptr2 = reinterpret_cast<Data*>(address);
 
@@ -24,7 +24,7 @@ int main()
     std::cout << "name   -> " << ptr2->name << "\n";
     std::cout << "age    -> " << ptr2->age << "\n";
     std::cout << "gender -> " << ptr2->gender << "\n";
-    
+
 /////////////////////////////////////////////////////////////////
     uintptr_t t;
     Data *ptr = &data;
