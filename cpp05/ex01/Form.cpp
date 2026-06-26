@@ -26,9 +26,9 @@ Form::Form(const Form &origin) : _name(origin._name), _signed(origin._signed), s
     std::cout << "Copy constructor called\n";
 }
 
-Form::Form(const std::string name, bool sign, const int sg_grd, const int exc_grd)
+Form::Form(const std::string name, const int sg_grd, const int exc_grd)
     : _name(name),
-      _signed(sign),
+      _signed(false),
       sign_grade(sg_grd),
       exec_grade(exc_grd)
 {

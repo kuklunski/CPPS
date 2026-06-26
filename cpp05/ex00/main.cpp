@@ -19,6 +19,7 @@ int main ()
     try {
         std::cout << "start try\n";
         Bureaucrat a("Bob", 10);
+        std::cout << a ;
         // Bureaucrat f("test", 1);
         // f.incrementGrade();
 

@@ -19,7 +19,7 @@ int main()
     Form a;
 
     std::cout << "\n---- Parameter Constructor ----\n";
-    Form b("Contract b", true, 50, 25);
+    Form b("Contract b", 50, 25);
 
     std::cout << "\n---- Copy Constructor ----\n";
     Form c(b);
@@ -27,9 +27,9 @@ int main()
     std::cout << "\n---- Assignment Operator ----\n";
     a = b;
 
-    std::cout << "\n---- << overloading -> print a ----\n";
+    std::cout << "\n---- print a ----\n";
     std::cout << a << "\n";
-    std::cout << "\n---- << overloading -> print b ----\n";
+    std::cout << "\n---- print b ----\n";
     std::cout << b << "\n";
     std::cout << "\n---- Getters ----\n";
     std::cout << "Name: " << b.getName() << std::endl;
@@ -39,15 +39,15 @@ int main()
 
     std::cout << "\n---- Try / Catch starts ----\n";
     try {
-        Form j("Alice",false, 10, 120);
-        Form i("Tom", false, 10, 20);
+        Form j("Alice", 10, 120);
+        Form i("Tom", 10, 20);
     }
     catch (const std::exception& e) {
         std::cout << e.what() << std::endl;
     }
-    Form k("Bob", false, 11, 10);
+    Form k("Bob", 11, 10);
     try {
-        std::cout << "\n---- << overloading -> print k before ----\n";
+        std::cout << "\n---- print k before ----\n";
         std::cout << k << "\n";
         Bureaucrat bt1("bobby", 12);
         k.beSigned(bt1);
@@ -57,17 +57,17 @@ int main()
         std::cout << "----> " << e.what() << std::endl;
     }
 
-    std::cout << "\n---- << overloading -> print k after ----\n";
+    std::cout << "\n---- print k after ----\n";
     std::cout << k << "\n";
 
 
     try {
         std::cout << "\n---- Testing signForm ----\n";
-        Form aa("exam", false, 100, 1);
-        Bureaucrat bb("yassir", 99);
+        Form aa("exam", 100, 1);
+        Bureaucrat b2("yassir", 99);
         std::cout << "print aa : " << aa << "\n";
-        std::cout << "print bb : " << bb << "\n";
-        bb.signForm(aa);
+        std::cout << "print b2 : " << b2 << "\n";
+        b2.signForm(aa);
     }
     catch (const std::exception& e)
     {

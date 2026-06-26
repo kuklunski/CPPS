@@ -28,7 +28,7 @@ class Form
         Form();
         ~Form();
         Form(const Form &origin);
-        Form(const std::string name, bool sign, const int sg_grd, const int exc_grd);
+        Form(const std::string name, const int sg_grd, const int exc_grd);
         Form &operator=(const Form &origin);
         std::string getName() const;
         bool getSigned() const;
