@@ -27,7 +27,7 @@ void RobotomyRequestForm::execute(Bureaucrat const & executor) const
         std::cout << "--- > " << "Robotomy failed\n";
 }
 
-RobotomyRequestForm::RobotomyRequestForm() : AForm("RobotomyRequestForm", false, 72, 45), target("default Robot Target")
+RobotomyRequestForm::RobotomyRequestForm() : AForm("RobotomyRequestForm", 72, 45), target("default Robot Target")
 {
     std::cout << "Robotomy default constructor called\n";
 }
@@ -37,7 +37,7 @@ RobotomyRequestForm::~RobotomyRequestForm()
     std::cout << "Robotomy destructor called\n";
 }
 
-RobotomyRequestForm::RobotomyRequestForm(const std::string &trg) : AForm("RobotomyRequestForm", false, 72, 45) , target(trg)
+RobotomyRequestForm::RobotomyRequestForm(const std::string &trg) : AForm("RobotomyRequestForm", 72, 45) , target(trg)
 {
     std::cout << "robotomy constructor with parameters called\n";
 }

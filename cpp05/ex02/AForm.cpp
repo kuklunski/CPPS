@@ -26,9 +26,9 @@ AForm::AForm(const AForm &origin) : _name(origin._name), _signed(origin._signed)
     std::cout << "AForm copy constructor called\n";
 }
 
-AForm::AForm(const std::string name, bool sign, const int sg_grd, const int exc_grd)
+AForm::AForm(const std::string name, const int sg_grd, const int exc_grd)
     : _name(name),
-      _signed(sign),
+      _signed(false),
       sign_grade(sg_grd),
       exec_grade(exc_grd)
 {

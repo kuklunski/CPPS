@@ -27,7 +27,7 @@ class AForm
     public :
         AForm();
         AForm(const AForm &origin);
-        AForm(const std::string name, bool sign, const int sg_grd, const int exc_grd);
+        AForm(const std::string name, const int sg_grd, const int exc_grd);
         AForm &operator=(const AForm &origin);
         std::string getName() const;
         bool getSigned() const;

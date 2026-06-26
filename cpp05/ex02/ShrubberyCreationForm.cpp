@@ -52,7 +52,7 @@ void ShrubberyCreationForm::execute(Bureaucrat const & executor) const
     std::cout << "--- > " << target << "_shrubbery file created\n";
 }
 
-ShrubberyCreationForm::ShrubberyCreationForm() : AForm("ShrubberyCreationForm", false, 145, 137), target("default Shrub Target")
+ShrubberyCreationForm::ShrubberyCreationForm() : AForm("ShrubberyCreationForm", 145, 137), target("default Shrub Target")
 {
     std::cout << "Shrubbery default constructor called\n";
 }
@@ -62,7 +62,7 @@ ShrubberyCreationForm::~ShrubberyCreationForm()
     std::cout << "Shrubbery destructor called\n";
 }
 
-ShrubberyCreationForm::ShrubberyCreationForm(const std::string& trg) : AForm("ShrubberyCreationForm", false, 145, 137), target(trg)
+ShrubberyCreationForm::ShrubberyCreationForm(const std::string& trg) : AForm("ShrubberyCreationForm", 145, 137), target(trg)
 {
     std::cout << "Shrubbery Constructor with parameters called\n";
 }

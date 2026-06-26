@@ -23,7 +23,7 @@ void PresidentialPardonForm::execute(Bureaucrat const & executor) const
     std::cout << "--- > "<< target << " has been pardoned by Zaphod Beeblebrox\n";
 }
 
-PresidentialPardonForm::PresidentialPardonForm() : AForm("PresidentialPardonForm", false, 25, 5), target("default President Name")
+PresidentialPardonForm::PresidentialPardonForm() : AForm("PresidentialPardonForm", 25, 5), target("default President Name")
 {
     std::cout << "PPF default constructor called\n";
 }
@@ -33,7 +33,7 @@ PresidentialPardonForm::~PresidentialPardonForm()
     std::cout << "PPF destructor called\n";
 }
 
-PresidentialPardonForm::PresidentialPardonForm(const std::string &trg) : AForm("PresidentialPardonForm", false, 25, 5), target(trg)
+PresidentialPardonForm::PresidentialPardonForm(const std::string &trg) : AForm("PresidentialPardonForm", 25, 5), target(trg)
 {
     std::cout << "PPF constructor with parameters called\n";
 }
