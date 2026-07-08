@@ -17,3 +17,9 @@
 #include <netinet/in.h> // bind() sockaddr_in
 #include <cstring>
 #include <unistd.h>
+#include <vector>
+#include <poll.h>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <map>

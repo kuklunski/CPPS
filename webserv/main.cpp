@@ -21,8 +21,24 @@
 // 0  // TCP for SOCK_STREAM
 // returns >= 0 on success
 // -1 on failure
-int main ()
+int main(int argc, char* argv[])
 {
+    if (argc != 2)
+    {
+        std::cerr << "Usage: ./parser <config_file>" << std::endl;
+        return 1;
+    }
+
+    std::vector<ServerConfig> configs = parse_config(argv[1]);
+
+    if (configs.empty())
+    {
+        std::cerr << "No server blocks found or file empty" << std::endl;
+        return 1;
+    }
+
+    print_configs(configs);
+    //return 0;
     // socket creation
     int serverfd = socket(AF_INET, SOCK_STREAM, 0);
     if (serverfd < 0) { 
@@ -52,7 +68,7 @@ int main ()
     std::cout << "bind completed : " << bind_return << std::endl;
 
     // listen()
-    int listen_ret = listen(serverfd, 10);
+    int listen_ret = listen(serverfd, SOMAXCONN);
     if (listen_ret < 0) {
         std::cerr << "Error in listen : " << listen_ret << std::endl;
         return 1;
@@ -66,11 +82,12 @@ int main ()
     server_pollfd.events = POLLIN;
     fds.push_back(server_pollfd);
     std::vector<std::string> buffers;
-
+    buffers.push_back("");
+    // we push one buffer so that clients fd and buffer both start at index = 1
+    int j = 0;
     while (true)
     {
         poll(fds.data(), fds.size(), 5000);
-
         for (size_t i = 0; i < fds.size(); i++)
         {
             if (fds[i].fd == serverfd && fds[i].revents & POLLIN)
@@ -92,28 +109,61 @@ int main ()
             {
                 // recv
                 char buffer[1024];
-                ssize_t bytes = recv(fds[i].fd, buffer, sizeof(buffer), 0);
-                if (bytes > 0)
+                ssize_t recv_bytes = recv(fds[i].fd, buffer, sizeof(buffer), 0);
+                if (recv_bytes > 0)
                 {
-                    buffers[i].append(buffer, bytes);
+                    ++j;
+                    buffers[i].append(buffer, recv_bytes);
                     if (buffers[i].find("\r\n\r\n") != std::string::npos)
                     {
-                        std::cout << "request completed" << std::endl;
-                        // send as before
+                        std::cout << "request completed" << j << std::endl;
+                        //send as before
+                        std::string response =  "HTTP/1.1 200 OK\r\n"
+                                                "Content-Length: 5\r\n"
+                                                "\r\n"
+                                                "Hello";
+                        ssize_t total_sent = 0;
+                        size_t response_len = response.size();
+                        // we cast so that we compare ssize_t(total_sent) with ssize_t(len)
+                        while (total_sent < (ssize_t)response_len)
+                        {
+                            // handle partial sends, we move the buffer by what was send response.c_str() + total_sent
+                            // and then we calculate the length of length of the message - what was sent
+                            ssize_t sent = send(fds[i].fd, response.c_str() + total_sent, response_len - total_sent, 0);
+                        
+                            if (sent <= 0)
+                                break;
+                            total_sent += sent;
+                        }
+                        close(fds[i].fd);
+                        buffers.erase(buffers.begin() + i);
+                        fds.erase(fds.begin() + i);
+                        i--;
                     }
                 }
-                else if (bytes == 0)
+                else if (recv_bytes == 0)
                 {
-                    // todo
+                    std::cout << "client disconnected " << std::endl;
+                    close(fds[i].fd);
+                    buffers.erase(buffers.begin() + i);
+                    fds.erase(fds.begin() + i);
+                    i--;
                 }
                 else{
-                    // todo
+                        std::cerr << "Error in recv" << std::endl;
+                        close(fds[i].fd);
+                        buffers.erase(buffers.begin() + i);
+                        fds.erase(fds.begin() + i);
+                        i--;
                 }
-                
             }
             else if (fds[i].revents & POLLHUP)
             {
                 // client disconnected
+                close(fds[i].fd);
+                buffers.erase(buffers.begin() + i);
+                fds.erase(fds.begin() + i);
+                i--;
             }
         }
     }

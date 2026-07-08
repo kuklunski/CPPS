@@ -1,4 +1,4 @@
-NAME = ScalarConverter
+NAME = Converter
 CFLAGS = -Wall -Werror -Wextra -std=c++98
 CC = c++
 Src_Files = main.cpp ScalarConverter.cpp

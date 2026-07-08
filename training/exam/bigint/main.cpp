@@ -22,7 +22,7 @@ int main()
     std::cout << "b++ = " << b++ << std::endl;
     std::cout << "b = " << b << std::endl;
 
-    std::cout << "(b << 10) =" << (b << 10) << std::endl;
+    std::cout << "(b << 10) = " << (b << 10) << std::endl;
     std::cout << "check if b keeps its value : " << b << std::endl;
     std::cout << "(b >> 1) = " << (b >> 1) << std::endl;
     std::cout << "check if b keeps its value : " << b << std::endl;
@@ -32,7 +32,7 @@ int main()
     std::cout << "d = " << d << std::endl;
     std::cout << "(d <<= 4) = " << (d <<= 4) << std::endl;
     std::cout << "check if d keeps its value : " << d << std::endl;
-    std::cout << "(d >>= 2) = " << (d >>= (const bigint)2) << std::endl;
+    std::cout << "(d >>= (const bigint)2) = " << (d >>= (const bigint)2) << std::endl;
     std::cout << "check if d keeps its value : " << d << std::endl;
 
     std::cout << "a = " << a << std::endl;
@@ -43,23 +43,18 @@ int main()
     // std::cout << "(d <= a) = " << (d <= a) << std::endl;
     std::cout << "(d > a) = " << (d > a) << std::endl;
     std::cout << "(d < a) = " << (d < a) << std::endl;
-    d = 4237;
+    std::cout << "we do d = 4236 which is d < e" << std::endl;
+    d = 4236;
     std::cout << "(d > e) = " << (d > e) << std::endl;
     std::cout << "(d < e) = " << (d < e) << std::endl;
     std::cout << "(d == e) = " << (d == e) << std::endl;
-    d = 425800;
-    d >>= 4;
-    std::cout << "a = " << a << std::endl;
-    std::cout << "d = " << d << std::endl;
-    std::cout << "(d > a) = " << (d > a) << std::endl;
-    std::cout << "(d < a) = " << (d < a) << std::endl;
-    std::cout << "(d >= a) = " << (d >= a) << std::endl;
-    std::cout << "(d == a) = " << (d == a) << std::endl;
-    std::cout << "(d != a) = " << (d != a) << std::endl;
+    // d = 425800;
+    // d >>= 4;
+    // std::cout << "a = " << a << std::endl;
+    // std::cout << "d = " << d << std::endl;
+    // std::cout << "(d > a) = " << (d > a) << std::endl;
+    // std::cout << "(d < a) = " << (d < a) << std::endl;
+    // std::cout << "(d >= a) = " << (d >= a) << std::endl;
+    // std::cout << "(d == a) = " << (d == a) << std::endl;
+    // std::cout << "(d != a) = " << (d != a) << std::endl;
 }
-
-int digit1 = (i >= 0) ? str[i--] - '0' : 0;
-int digit2 = (j >= 0) ? str[j--] - '0' : 0;
-sum = digit1 + digit2 + carry;
-carry = sum / 10;
-result.insert(result.begin(), (sum % 10) + '0');
