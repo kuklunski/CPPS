@@ -35,3 +35,10 @@ int main()
     delete p;
     return 0;
 }
+
+// only use is :
+// 1 - used down and upcast
+// 2 - dynamic_cast is used at runtime to find out correct down cast
+// if it fails it returns a NULL pointer or throws an exception of type bad_cast
+// 3 - the base class should have polymorphism
+// 4 - if we are are sure that we will never cast to wrong object; then use static_cast instead because its faster

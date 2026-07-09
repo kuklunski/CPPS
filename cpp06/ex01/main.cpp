@@ -42,3 +42,10 @@ int main()
     std::cout << "gender -> " << ptr->gender << "\n";
     return 0;
 }
+
+// no conversion, just relabeling
+// 1 - it performs very dangerous type casting from a pointer to any other pointer of any type
+// 2 - used to work on bits
+// 3 - the result of reinterpret cast cannot be used for anything other than
+// being casted back to the original type
+// 4 - if we use this type of cast the program becomes non portable because of differences in architecture
