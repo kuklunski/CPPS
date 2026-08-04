@@ -1,52 +1,33 @@
 #include "bigint.hpp"
 
-bigint::~bigint()
-{
-
-}
-
 bigint::bigint() : number("0")
-{
-}
-
-bigint::bigint(int x)
+{}
+bigint::~bigint()
+{}
+bigint::bigint(unsigned int x)
 {
     std::stringstream ss;
     ss << x;
-    this->number = ss.str();
-    // std::cout << "number : "<< number << std::endl;
+    number = ss.str();
 }
-
-bigint::bigint(const bigint& other)
-{
-    this->number = other.number;
-}
+bigint::bigint(const bigint& other) : number(other.number)
+{}
 
 bigint& bigint::operator=(const bigint& other)
 {
-    number = other.number;
+    if (this != &other)
+    {
+        number = other.number;
+    }
     return *this;
 }
 
-std::ostream& operator<<(std::ostream& os,const bigint& obj)
-{
-    os << obj.number;
-    return os;
-}
-
-std::string bigint::getstr() const
-{
-    return this->number;
-}
-
-//   "1337"
-// + "9999"
 std::string bigint::addition(std::string str1, std::string str2)
 {
-    std::string result;
-    int carry = 0;
     int i = str1.length() - 1;
     int j = str2.length() - 1;
+    int carry = 0;
+    std::string result;
 
     while (i >= 0 || j >= 0 || carry)
     {
@@ -59,149 +40,162 @@ std::string bigint::addition(std::string str1, std::string str2)
     return result;
 }
 
+std::string bigint::get_number() const
+{
+    return number;
+}
+
+std::ostream& operator<<(std::ostream& os, const bigint& obj)
+{
+    os << obj.get_number();
+    return os;
+}
+
 bigint& bigint::operator+=(const bigint& other)
 {
-    this->number = addition(this->number, other.number);
+    number = addition(number, other.number);
     return *this;
+}
+
+bigint bigint::operator+(const bigint& other) const
+{
+    bigint temp = *this;
+    temp += other;
+    return temp;
 }
 
 bigint& bigint::operator++()
 {
-    this->number = addition(this->number, "1");
+    (*this) += bigint(1);
     return *this;
 }
 
 bigint bigint::operator++(int)
 {
-    bigint temp = *this;
-    this->number = addition(this->number, "1");
+    bigint temp = (*this);
+    (*this) += bigint(1);
     return temp;
 }
 
-bigint bigint::operator>>(int x)
+bigint bigint::operator<<(unsigned int x) const
 {
-    bigint temp = *this;
-    while(x > 0)
-    {  
+    bigint temp = (*this);
+
+    if (temp.number == "0" || temp.number =="")
+        return temp;
+    while (x > 0)
+    {
+        temp.number.push_back('0');
+        x--;
+    }
+    return temp;
+}
+bigint bigint::operator>>(unsigned int x) const
+{
+    bigint temp = (*this);
+
+    if (x >= temp.number.length())
+    {
+        return bigint(0);
+    }
+    while (x > 0)
+    {
         temp.number.erase(temp.number.length() - 1, 1);
         x--;
     }
     return temp;
 }
 
-bigint bigint::operator<<(int x)
-{
-    bigint temp = *this;
-    while(x > 0)
-    {  
-        temp.number.push_back('0');
-        x--;
-    }
-    return temp;
-}
-
-bigint operator+(bigint left, int x)
-{
-    bigint temp(x);
-    left += temp;
-    return left;
-}
-bigint operator+(bigint left, bigint right)
-{
-    left += right;
-    return left;
-}
-bigint operator+(int x, bigint right)
-{
-    bigint temp(x);
-    right += temp;
-    return right;
-}
-
-bigint& bigint::operator>>=(int x)
-{
-    (*this) = (*this) >> x;
-    return *this;
-}
-
-bigint& bigint::operator<<=(int x)
+bigint& bigint::operator<<=(unsigned int x)
 {
     (*this) = (*this) << x;
     return *this;
 }
 
+bigint& bigint::operator>>=(unsigned int x)
+{
+    (*this) = (*this) >> x;
+    return (*this);
+}
+
+bigint bigint::operator<<(const bigint& other) const
+{
+    std::stringstream ss(other.get_number());
+    unsigned int x = 0;
+    ss >> x;
+    bigint temp = (*this);
+    temp = temp << x;
+    return temp;
+}
+
+bigint bigint::operator>>(const bigint& other) const
+{
+    std::stringstream ss(other.get_number());
+    unsigned int x = 0;
+    ss >> x;
+    bigint temp = (*this);
+    temp = temp >> x;
+    return temp;
+}
 bigint& bigint::operator<<=(const bigint& other)
 {
-    int i = 0;
-    std::string str = other.getstr();
-    std::stringstream ss(str);
-    ss >> i;
-    (*this) = (*this) << i;
+    std::stringstream ss(other.get_number());
+    unsigned int x = 0;
+    ss >> x;
+    (*this) = (*this) << x;
     return *this;
 }
 
 bigint& bigint::operator>>=(const bigint& other)
 {
-    int i = 0;
-    std::string str = other.getstr();
-    std::stringstream ss(str);
-    ss >> i;
-    (*this) = (*this) >> i;
+    std::stringstream ss(other.get_number());
+    unsigned int x = 0;
+    ss >> x;
+    (*this) = (*this) >> x;
     return *this;
-}
-
-bool bigint::operator>(const bigint& other) const
-{
-    std::string number1 = this->getstr();
-    std::string number2 = other.getstr();
-
-    int length1 = number1.length();
-    int length2 = number2.length();
-
-    if (length1 > length2)
-        return true;
-    else if (length1 < length2)
-        return false;
-    else {
-        for (int i = 0; i < length1; i++)
-        {
-            if (number1[i] != number2[i])
-                return number1[i] > number2[i];
-        }
-        return false;
-    }
-}
-
-bool bigint::operator<(const bigint& other) const
-{
-    return other > *this;
 }
 
 bool bigint::operator==(const bigint& other) const
 {
-    if (this->getstr() == other.getstr())
+    std::string str1 = number;
+    std::string str2 = other.get_number();
+    if (str1 == str2)
         return true;
-    else
+    else 
         return false;
 }
 
 bool bigint::operator!=(const bigint& other) const
 {
-    if (this->getstr() != other.getstr())
+    if (number != other.get_number())
         return true;
     else
         return false;
 }
 
-bool bigint::operator>=(const bigint& other) const
+bool bigint::operator<(const bigint& other) const
 {
-    if ((*this < other) == true)
-        return false;
-    return true;
+    std::string str1 = number;
+    std::string str2 = other.get_number();
+    int len1 = str1.length();
+    int len2 = str2.length();
+    if (len1 != len2)
+        return len1 < len2;
+    else
+        return str1 < str2;
 }
+
+bool bigint::operator>(const bigint& other) const
+{
+    return other < (*this);
+}
+
 bool bigint::operator<=(const bigint& other) const
 {
-    if ((*this) > other == true)
-        return false;
-    return true;
+    return (((*this) < other) || ((*this) == other));
+}
+
+bool bigint::operator>=(const bigint& other) const
+{
+    return (((*this) > other) || ((*this) == other));
 }

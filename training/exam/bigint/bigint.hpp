@@ -1,5 +1,4 @@
-#ifndef BIGINT_HPP
-#define BIGINT_HPP
+#pragma once
 
 #include <iostream>
 #include <string>
@@ -12,30 +11,29 @@ class bigint
     public :
         bigint();
         ~bigint();
-        bigint(int x);
+        bigint(unsigned int x);
         bigint(const bigint& other);
         bigint& operator=(const bigint& other);
-        std::string getstr() const;
-        friend std::ostream& operator<<(std::ostream& os, const bigint& obj);
-        bigint& operator+=(const bigint& other);
         std::string addition(std::string str1, std::string str2);
+        std::string get_number() const;
+        bigint operator+(const bigint& other) const;
+        bigint& operator+=(const bigint& other);
         bigint& operator++();
         bigint operator++(int);
-        bigint operator>>(int x);
-        bigint operator<<(int x);
-        bigint& operator>>=(int x);
-        bigint& operator<<=(int x);
-        bigint& operator>>=(const bigint& other);
+        bigint operator<<(unsigned int x) const;
+        bigint operator>>(unsigned int x) const;
+        bigint& operator<<=(unsigned int x);
+        bigint& operator>>=(unsigned int x);
+        bigint operator<<(const bigint& other) const;
+        bigint operator>>(const bigint& other) const;
         bigint& operator<<=(const bigint& other);
-        bool operator>(const bigint& other) const;
-        bool operator<(const bigint& other) const;
+        bigint& operator>>=(const bigint& other);
         bool operator==(const bigint& other) const;
         bool operator!=(const bigint& other) const;
-        bool operator>=(const bigint& other) const;
+        bool operator<(const bigint& other) const;
+        bool operator>(const bigint& other) const;
         bool operator<=(const bigint& other) const;
+        bool operator>=(const bigint& other) const;
 };
 
-bigint operator+(bigint left, int x);
-bigint operator+(bigint left, bigint right);
-bigint operator+(int x, bigint right);
-#endif
+std::ostream& operator<<(std::ostream& os, const bigint& obj);

@@ -1,145 +1,149 @@
 #include "vect2.hpp"
 
-vect2::vect2() : vect(2, 0)
-{
-}
-vect2::vect2(int x, int y)
-{
-    vect.push_back(x);
-    vect.push_back(y);
-}
-        
-vect2::~vect2()
-{
-}
+vect2::vect2() : x(0), y(0)
+{}
 
-vect2::vect2(const vect2& origin)
+vect2::vect2(int a, int b) : x(a), y(b)
+{}
+
+vect2::~vect2() {}
+        
+vect2::vect2(const vect2& other) : x(other.x), y(other.y)
+{}
+
+vect2& vect2::operator=(const vect2& other)
 {
-    this->vect = origin.vect;
-}
-vect2& vect2::operator=(const vect2& origin)
-{
-    if (this != &origin)
+    if (this != &other)
     {
-        this->vect = origin.vect;
+        x = other.x;
+        y = other.y;
     }
     return *this;
 }
+
+int vect2::getx() const
+{
+    return x;
+}
+
+int vect2::gety() const
+{
+    return y;
+}
+
 //std::cout << "{" << v[0] << ", " << v[1] << "}" << std::endl;
 std::ostream& operator<<(std::ostream &os, const vect2& obj)
 {
-    // Make sure to use [0] and [1] to pull the individual numbers out!
-    os << "{" << obj.vect[0] << ", " << obj.vect[1] << "}";
-    
-
-    return os;
+    os << "{" << obj.getx() << ", " << obj.gety() << "}";
+    return os; 
 }
 
-int& vect2::operator[](size_t index) 
+int& vect2::operator[](int index)
 {
-    return vect[index];
+    if (index == 0)
+        return x;
+    else
+        return y;
 }
 
-const int& vect2::operator[](size_t index) const
+const int& vect2::operator[](int index) const
 {
-    return vect[index];
+    if (index == 0)
+        return x;
+    else
+        return y;
 }
+
 
 vect2& vect2::operator++()
 {
-    this->vect[0]++;
-    this->vect[1]++;
+    x++;
+    y++;
+    return *this;
+}
+
+vect2& vect2::operator--()
+{
+    x--;
+    y--;
     return *this;
 }
 
 vect2 vect2::operator++(int)
 {
     vect2 temp = *this;
-    this->vect[0]++;
-    this->vect[1]++;
+    x++;
+    y++;
     return temp;
-}
-
-vect2& vect2::operator--()
-{
-    this->vect[0]--;
-    this->vect[1]--;
-    return *this;
 }
 
 vect2 vect2::operator--(int)
 {
     vect2 temp = *this;
-    this->vect[0]--;
-    this->vect[1]--;
+    x--;
+    y--;
     return temp;
+}
+
+vect2 vect2::operator+(const vect2& other) const
+{
+    return (vect2(x + other.x, y + other.y));
+}
+vect2 vect2::operator-(const vect2& other) const
+{
+    return (vect2(x - other.x, y - other.y));
+}
+vect2 vect2::operator+()
+{
+    return (vect2(+x, +y));
+}
+vect2 vect2::operator-()
+{
+    return (vect2(-x, -y));
 }
 
 vect2& vect2::operator+=(const vect2& other)
 {
-    this->vect[0] += other.vect[0];
-    this->vect[1] += other.vect[1];
+    x = x + other.x;
+    y = y + other.y;
     return *this;
 }
 vect2& vect2::operator-=(const vect2& other)
 {
-    this->vect[0] -= other.vect[0];
-    this->vect[1] -= other.vect[1];
+    x = x - other.x;
+    y = y - other.y;
     return *this;
 }
 
-vect2& vect2::operator*=(int scalar)
+vect2& vect2::operator*=(int ratio)
 {
-    this->vect[0] *= scalar;
-    this->vect[1] *= scalar;
+    x = x * ratio;
+    y = y * ratio;
     return *this;
 }
 
-vect2 operator+(vect2 left, vect2 right)
+vect2 vect2::operator*(int ratio) const
 {
-    left += right;
-    return left;
+    return (vect2(x * ratio, y * ratio));
 }
 
-vect2 operator-(vect2 left, vect2 right)
+vect2 operator*(int ratio, const vect2& obj)
 {
-    left -= right;
-    return left;
+    return (vect2(obj.getx() * ratio, obj.gety() * ratio));
 }
 
-vect2 operator*(vect2 left, int scalar)
+bool vect2::operator==(const vect2& other) const
 {
-    left *= scalar;
-    return left;
-}
-
-vect2 operator*(int scalar, vect2 right)
-{
-    right *= scalar;
-    return right;
-}
-
-vect2 operator-(vect2 left)
-{
-    vect2 result = left;
-    result *= -1;
-    return result;
-}
-
-bool operator==(vect2 left, vect2 right)
-{
-    if ((left.vect[0] ==  right.vect[0] )&& (left.vect[1] == right.vect[1]))
+    if (x == other.x && y == other.y)
         return true;
     else
         return false;
 }
 
-
-bool operator!=(vect2 left, vect2 right)
+bool vect2::operator!=(const vect2& other) const
 {
-    if ((left.vect[0] ==  right.vect[0] ) && (left.vect[1] == right.vect[1]))
+    if (x == other.x && y == other.y)
         return false;
     else
         return true;
 }
-

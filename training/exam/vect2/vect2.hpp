@@ -1,37 +1,42 @@
-#ifndef VECT2_HPP
-#define VECT2_HPP
+#pragma once
 
-#include <vector>
 #include <iostream>
 
-class vect2 {
+class vect2
+{
     private :
-        std::vector<int> vect;
+        int x;
+        int y;
     public :
         vect2();
-        vect2(int x, int y);
+        vect2(int a, int b);
         ~vect2();
-        vect2(const vect2& origin);
-        vect2 &operator=(const vect2& origin);
-        friend std::ostream& operator<<(std::ostream &os, const vect2& obj);
-        int& operator[](size_t index);
-        const int& operator[](size_t index) const;
-        // v++ operator, takes int returns an obj
-        vect2 operator++(int);
+        vect2(const vect2& other);
+        vect2& operator=(const vect2& other);
+        int getx() const;
+        int gety() const;
+        int& operator[](int index);
+        const int& operator[](int index) const;
+
         vect2& operator++();
-        vect2 operator--(int);
         vect2& operator--();
+        vect2 operator++(int);
+        vect2 operator--(int);
+
         vect2& operator+=(const vect2& other);
         vect2& operator-=(const vect2& other);
-        vect2& operator*=(int scalar);
-        friend bool operator==(vect2 left, vect2 right);
-        friend bool operator!=(vect2 left, vect2 right);
-    };
-vect2 operator+(vect2 left, vect2 right);
-vect2 operator-(vect2 left, vect2 right);
-vect2 operator*(vect2 left, int scalar);
-vect2 operator*(int scalar, vect2 right);
-vect2 operator-(vect2 left);
+        vect2& operator*=(int ratio);
+        vect2 operator*(int ratio) const;
+        vect2 operator+(const vect2& other) const;
+        vect2 operator-(const vect2& other) const;
+
+        vect2 operator+();
+        vect2 operator-();
 
 
-#endif
+        bool operator==(const vect2& other) const;
+        bool operator!=(const vect2& other) const;
+};
+
+std::ostream& operator<<(std::ostream& os, const vect2& obj);
+vect2 operator*(int ratio, const vect2& obj);

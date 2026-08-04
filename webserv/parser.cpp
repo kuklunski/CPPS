@@ -1,38 +1,5 @@
 #include "A.hpp"
 
-
-
-// ─── Structs ────────────────────────────────────────────────────────────────
-
-struct LocationConfig
-{
-    std::string              path;
-    std::string              root;
-    std::string              index;
-    std::vector<std::string> methods;
-    bool                     autoindex;
-    std::string              upload_store;
-    std::string              cgi_ext;
-    std::string              redirect;
-    int                      max_body;
-
-    LocationConfig() : autoindex(false), max_body(0) {}
-};
-
-struct ServerConfig
-{
-    std::string                 host;
-    int                         port;
-    std::string                 server_name;
-    std::string                 root;
-    std::string                 index;
-    std::map<int, std::string>  error_pages;
-    int                         max_body;
-    std::vector<LocationConfig> locations;
-
-    ServerConfig() : port(0), max_body(0) {}
-};
-
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
 std::vector<std::string> tokenize(const std::string& line)

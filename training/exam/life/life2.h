@@ -5,10 +5,10 @@
 # include <stdlib.h>
 # include <stdbool.h>
 
-typedef struct
+typedef struct s_game
 {
 	int		width;
 	int		height;
-	int		iteration;
+	int		iterations;
 	char	**map;
 } t_game;
