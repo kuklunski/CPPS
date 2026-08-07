@@ -58,9 +58,13 @@ struct ServerConfig
 
 struct Client {
     int         fd;
-    std::string buffer;
+    std::string send_queue;
     time_t      last_active;
     bool        is_server;
+    int         server_port;
+    std::string server_name;
+    std::string remote_addr;
+    all*        All;
 };
 
 void print_configs(const std::vector<ServerConfig>& configs);

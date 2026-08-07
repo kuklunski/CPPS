@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "part_C.hpp"
 #include "A.hpp"
 
 int create_and_bind_socket(const std::string& host, int port)
@@ -90,7 +91,6 @@ int main(int argc, char* argv[])
 
         Client c;
         c.fd = fd;
-        c.buffer = "";
         c.last_active = 0;
         c.is_server = true;
         clients.push_back(c);
@@ -112,52 +112,111 @@ int main(int argc, char* argv[])
                     perror("accept");
                     continue;
                 }
+
                 struct pollfd client_pollfd;
                 client_pollfd.fd = client_fd;
                 client_pollfd.events = POLLIN;
                 fds.push_back(client_pollfd);
 
                 Client c;
-                c.fd = client_fd;
-                c.buffer = "";
+                c.fd          = client_fd;
+                c.send_queue  = "";
                 c.last_active = time(NULL);
-                c.is_server = false;
+                c.is_server   = false;
+                c.server_port = configs[i].port;
+                c.server_name = configs[i].server_name;
+                c.remote_addr = inet_ntoa(client_addr.sin_addr);
+                c.All         = new all();
                 clients.push_back(c);
             }
             else if (fds[i].revents & POLLIN)
             {
-                char buffer[1024];
+                char buffer[4096];
                 ssize_t recv_bytes = recv(fds[i].fd, buffer, sizeof(buffer), 0);
+
                 if (recv_bytes > 0)
                 {
-                    ++j;
-                    clients[i].buffer.append(buffer, recv_bytes);
                     clients[i].last_active = time(NULL);
-                    if (clients[i].buffer.find("\r\n\r\n") != std::string::npos)
+                    all* a = clients[i].All;
+
+                    if (!a->headers_done)
                     {
-                        std::cout << "request completed " << j << std::endl;
-                        std::string response =  "HTTP/1.1 200 OK\r\n"
-                                                "Content-Length: 5\r\n"
-                                                "\r\n"
-                                                "Hello";
-                        ssize_t total_sent = 0;
-                        size_t response_len = response.size();
-                        while (total_sent < (ssize_t)response_len)
+                        a->req.raw_request.append(buffer, recv_bytes);
+
+                        size_t header_end = a->req.raw_request.find("\r\n\r\n");
+                        if (header_end != std::string::npos)
                         {
-                            ssize_t sent = send(fds[i].fd, response.c_str() + total_sent, response_len - total_sent, 0);
-                            if (sent <= 0)
-                                break;
-                            total_sent += sent;
+                            a->headers_done = true;
+
+                            // bytes that arrived after \r\n\r\n in this same recv are body data
+                            std::string overflow = a->req.raw_request.substr(header_end + 4);
+                            a->req.raw_request.erase(header_end + 4); // keep headers + \r\n\r\n only
+
+                            // TODO: replace with B's real header parser
+                            // a->req.content_length = get_content_length(a->req.raw_request);
+                            a->req.content_length = 0; // stub until B exposes the real function
+
+                            if (a->req.content_length > 0)
+                            {
+                                std::ostringstream oss;
+                                oss << "/tmp/webserv_body_" << clients[i].fd;
+                                a->req.body_filepath = oss.str();
+                                a->req.body_fd = open(a->req.body_filepath.c_str(),
+                                                    O_CREAT | O_WRONLY | O_TRUNC, 0644);
+
+                                if (a->req.body_fd < 0)
+                                {
+                                    perror("open");
+                                    // TODO: send 500, cleanup client
+                                }
+
+                                if (!overflow.empty())
+                                {
+                                    write(a->req.body_fd, overflow.c_str(), overflow.size());
+                                    a->body_bytes_written += overflow.size();
+                                }
+
+                                if (a->body_bytes_written >= a->req.content_length)
+                                {
+                                    close(a->req.body_fd);
+                                    std::cout << "request complete (with body)" << std::endl;
+                                    // TODO: reader(*a, fds[i].fd);
+                                    // TODO: clients[i].send_queue = a->res.respond;
+                                    // TODO: fds[i].events = POLLIN | POLLOUT;
+                                }
+                            }
+                            else
+                            {
+                                // no body expected (GET, DELETE, or POST with no Content-Length)
+                                std::cout << "request complete (no body)" << std::endl;
+                                // TODO: reader(*a, fds[i].fd);
+                                // TODO: clients[i].send_queue = a->res.respond;
+                                // TODO: fds[i].events = POLLIN | POLLOUT;
+                            }
                         }
-                        close(fds[i].fd);
-                        fds.erase(fds.begin() + i);
-                        clients.erase(clients.begin() + i);
-                        i--;
+                    }
+                    else
+                    {
+                        // headers already parsed, this recv is pure body bytes
+                        write(a->req.body_fd, buffer, recv_bytes);
+                        a->body_bytes_written += recv_bytes;
+
+                        if (a->body_bytes_written >= a->req.content_length)
+                        {
+                            close(a->req.body_fd);
+                            std::cout << "request complete (body finished)" << std::endl;
+                            // TODO: reader(*a, fds[i].fd);
+                            // TODO: clients[i].send_queue = a->res.respond;
+                            // TODO: fds[i].events = POLLIN | POLLOUT;
+                        }
                     }
                 }
                 else if (recv_bytes == 0)
                 {
                     std::cout << "client disconnected" << std::endl;
+                    if (clients[i].All->req.body_fd >= 0)
+                        close(clients[i].All->req.body_fd);
+                    delete clients[i].All;
                     close(fds[i].fd);
                     fds.erase(fds.begin() + i);
                     clients.erase(clients.begin() + i);
@@ -166,14 +225,46 @@ int main(int argc, char* argv[])
                 else
                 {
                     std::cerr << "Error in recv" << std::endl;
+                    if (clients[i].All->req.body_fd >= 0)
+                        close(clients[i].All->req.body_fd);
+                    delete clients[i].All;
                     close(fds[i].fd);
                     fds.erase(fds.begin() + i);
                     clients.erase(clients.begin() + i);
                     i--;
                 }
             }
+            else if (fds[i].revents & POLLOUT)
+            {
+                // TODO: uncomment when C is ready
+                // ssize_t sent = send(fds[i].fd,
+                //                     clients[i].send_queue.c_str(),
+                //                     clients[i].send_queue.size(), 0);
+                // if (sent > 0)
+                // {
+                //     clients[i].send_queue.erase(0, sent);
+                //     if (clients[i].send_queue.empty())
+                //     {
+                //         delete clients[i].All;
+                //         clients[i].All = NULL;
+                //         close(fds[i].fd);
+                //         fds.erase(fds.begin() + i);
+                //         clients.erase(clients.begin() + i);
+                //         i--;
+                //     }
+                // }
+                // else
+                // {
+                //     delete clients[i].All;
+                //     close(fds[i].fd);
+                //     fds.erase(fds.begin() + i);
+                //     clients.erase(clients.begin() + i);
+                //     i--;
+                // }
+            }
             else if (fds[i].revents & POLLHUP)
             {
+                delete clients[i].All;
                 close(fds[i].fd);
                 fds.erase(fds.begin() + i);
                 clients.erase(clients.begin() + i);
@@ -190,6 +281,7 @@ int main(int argc, char* argv[])
             if (now - clients[i].last_active > 30)
             {
                 std::cout << "client timed out: " << clients[i].fd << std::endl;
+                delete clients[i].All;
                 close(clients[i].fd);
                 fds.erase(fds.begin() + i);
                 clients.erase(clients.begin() + i);
