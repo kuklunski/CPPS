@@ -9,12 +9,12 @@ set::~set()
 set::set(const set& other) : _bag(other._bag)
 {}
 
-set& set::operator=(const set& other)
-{
-    if (this != &other)
-        _bag = other._bag;
-    return *this;
-}
+// set& set::operator=(const set& other)
+// {
+//     if (this != &other)
+//         _bag = other._bag;
+//     return *this;
+// }
 
 bool set::has(int value) const
 {
