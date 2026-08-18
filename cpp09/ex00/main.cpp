@@ -200,12 +200,14 @@ int main (int ac, char* av[])
         float price = btc.getPriceForDate(firsthalf);
         if (price != -1)
         {
-            std::cout << firsthalf << " => "
-            << quantity
-            << " = "
-            << std::fixed << std::setprecision(2)
+            std::cout << firsthalf << " => ";
+            std::cout.unsetf(std::ios::floatfield);
+            std::cout << std::setprecision(6) << quantity << " = ";
+            std::cout << std::fixed << std::setprecision(2)
             << price * quantity
             << std::endl;
+            std::cout.unsetf(std::ios::floatfield);
+            std::cout << std::setprecision(6);
         }
     }
     // debugg

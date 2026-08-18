@@ -14,8 +14,6 @@
 #define ARRAY_HPP
 
 #include <iostream>
-#include <cstdlib>
-#include <algorithm>
 
 template <typename T> class Array
 {

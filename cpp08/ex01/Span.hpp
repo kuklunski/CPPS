@@ -15,28 +15,36 @@
 
 #include <iostream>
 #include <vector>
-#include <list>
-#include <deque>
-#include <limits>
-#include <set>
-#include <cstdlib>
-#include <ctime> 
 #include <algorithm>
+#include <numeric>
+#include <iterator>
+#include <stdexcept>
+#include <cstdlib>
+#include <ctime>
 
 class Span
 {
     private :
         unsigned int N;
         std::vector<int> span;
-        std::set<int> _set;
-        
+
     public :
         Span();
-        ~Span();
         Span(unsigned int value);
-        //Span& operator=(const Span& other);
-        //Span(const Span& other);
+        Span(const Span& other);
+        Span& operator=(const Span& other);
+        ~Span();
+
         void addNumber(int x);
+
+        template <typename InputIterator>
+        void addNumber(InputIterator first, InputIterator last)
+        {
+            if (span.size() + static_cast<size_t>(std::distance(first, last)) > N)
+                throw std::invalid_argument("span is full !!!");
+            span.insert(span.end(), first, last);
+        }
+
         int shortestSpan();
         int longestSpan();
         void print_vector();

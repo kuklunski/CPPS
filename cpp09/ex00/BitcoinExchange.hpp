@@ -10,6 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef BITCOINEXCHANGE_HPP
+#define BITCOINEXCHANGE_HPP
+
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -26,3 +29,5 @@ class BitcoinExchange
         void printMap();
         float getPriceForDate(const std::string& date);
 };
+
+#endif

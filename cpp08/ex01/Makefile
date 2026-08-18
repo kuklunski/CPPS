@@ -1,7 +1,7 @@
 NAME = span
 CFLAGS = -Wall -Werror -Wextra -std=c++98
 CC = c++
-Src_Files = main.cpp span.cpp
+Src_Files = main.cpp Span.cpp
 Object_files= $(Src_Files:.cpp=.o)
 
 all : $(NAME)

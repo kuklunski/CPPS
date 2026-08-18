@@ -19,61 +19,67 @@ Span::Span() : N(0)
     std::cout << "Span def constuctor\n";
 }
 
-Span::~Span()
-{
-    std::cout << "Span destructor\n";
-}
-
 Span::Span(unsigned int value) : N(value)
 {
     std::cout << "Span constuctor with 'N'\n";
 }
 
+Span::Span(const Span& other) : N(other.N), span(other.span)
+{
+    std::cout << "Span copy constructor\n";
+}
+
+Span& Span::operator=(const Span& other)
+{
+    std::cout << "Span assignment operator\n";
+    if (this != &other)
+    {
+        N = other.N;
+        span = other.span;
+    }
+    return *this;
+}
+
+Span::~Span()
+{
+    std::cout << "Span destructor\n";
+}
+
 void Span::addNumber(int x)
 {
     if (span.size() < N)
-    {
         span.push_back(x);
-        _set.insert(x);
-    }
     else
         throw std::invalid_argument("span is full !!!");
 }
 
 int Span::shortestSpan()
 {
-    if (_set.size() >= 2)
-    {
-        int min_dist = std::numeric_limits<int>::max();
-        std::set<int>::iterator it = _set.begin();
-        std::set<int>::iterator it_next = it;
-        ++it_next;
-        while (it_next != _set.end())
-        {
-            int diff = *it_next - *it;
-            if (diff < min_dist)
-                min_dist = diff;
-            ++it;
-            ++it_next;    
-        }
-        return min_dist;
-    }
-    else 
+    if (span.size() < 2)
         throw std::invalid_argument("span is of size < 2");
+
+    std::vector<int> sorted(span);
+    std::sort(sorted.begin(), sorted.end());
+
+    std::vector<int> diffs(sorted.size());
+    std::adjacent_difference(sorted.begin(), sorted.end(), diffs.begin());
+
+    // diffs[0] is sorted[0] itself (no previous element), skip it
+    return *std::min_element(diffs.begin() + 1, diffs.end());
 }
 
 int Span::longestSpan()
 {
-    if (_set.size() < 2)
+    if (span.size() < 2)
         throw std::invalid_argument("span is of size < 2");
-    else 
-        return *_set.rbegin() - *_set.begin();
+    return *std::max_element(span.begin(), span.end())
+         - *std::min_element(span.begin(), span.end());
 }
 
 void Span::print_vector()
 {
-    for (std::set<int>::iterator it1 = _set.begin(); it1 != _set.end(); ++it1)
-        std::cout << *it1 << " ";
+    for (std::vector<int>::iterator it = span.begin(); it != span.end(); ++it)
+        std::cout << *it << " ";
     std::cout << std::endl;
 }
 
