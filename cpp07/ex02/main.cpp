@@ -11,13 +11,14 @@
 /* ************************************************************************** */
 
 #include "Array.hpp"
+#include <string>
 
 int main ()
 {
     int x = 14;
     Array<int> test;
     Array<int> test2(x);
-    std::cout << "siiiize :::: "<< test2.size() << "\n"; 
+    std::cout << "siiiize :::: "<< test2.size() << "\n";
     Array<int> test3(test2);
     Array<int> test4(0);
     test2 = test;
@@ -51,5 +52,32 @@ int main ()
     {
         std::cout << e.what() << ": equal to length" << std::endl;
     }
-    std::cout << "siiiize :::: "<< arr.size() << "\n"; 
+    std::cout << "siiiize :::: "<< arr.size() << "\n";
+
+    // same tests, but with a complex type (std::string) instead of int
+    Array<std::string> strArr(3);
+    strArr[0] = "hello";
+    strArr[1] = "world";
+    strArr[2] = "!";
+
+    for (int i = 0; i < 3; i++)
+        std::cout << strArr[i] << std::endl;
+
+    Array<std::string> strCopy(strArr);
+    strCopy[0] = "changed";
+    std::cout << "original[0] : " << strArr[0] << std::endl;
+    std::cout << "copy[0]     : " << strCopy[0] << std::endl;
+
+    Array<std::string> strAssigned;
+    strAssigned = strArr;
+    std::cout << "assigned[1] : " << strAssigned[1] << std::endl;
+
+    try {
+        std::cout << strArr[3] << std::endl;
+    }
+    catch (std::exception &e)
+    {
+        std::cout << e.what() << ": out of bounds on string array" << std::endl;
+    }
+    std::cout << "string array siiiize :::: " << strArr.size() << "\n";
 }
